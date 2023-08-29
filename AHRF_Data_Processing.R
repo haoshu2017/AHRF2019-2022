@@ -112,4 +112,4 @@ ahrf_county_2022<-ahrf_county[[3]]
 # Delete raw data as it’s too large ---------------------------------------
 unlink(raw_src)
 
-write.xlsx(ahrf_county, paste0(data_out, "/ahrf_county_2019-2020.xlsx"))
+write.xlsx(ahrf_county, paste0(data_out, "/ahrf_county_2019-2022.xlsx"))
