@@ -107,6 +107,42 @@ ahrf_county_2021<-ahrf_county[[2]]
 ahrf_county_2022<-ahrf_county[[3]]
 
 
+# Join all years into one dataframe --------------------------------------
+ahrf_df<-list(ahrf_2020, ahrf_2021,ahrf_2022)
+
+
+ahrf_full<-ahrf_df %>% reduce(full_join, by = "F04437") %>% 
+        select(-contains(c('x','y'))) %>%
+        relocate('F04437', 'F00011', 'F00012') %>%
+        pivot_longer(cols = -(1:3),
+                     names_to = c('variable','year'),
+                     names_sep = '-',
+                     values_to = 'value') %>%
+        pivot_wider(names_from = 'variable', values_from = 'value') %>%
+        arrange('F00011', 'F00012') %>%
+        mutate(year = as.numeric(year) + 2000)
+
+names(ahrf_full)<-c('County,State',
+                    'FIPS State Code',
+                    'FIPS County Code',
+                    'year',
+                    'TotalPhysMedRehab',
+                    'TeachPhysMedRehab',
+                    'STRehabHosp',
+                    'LTRehabHosp',
+                    'HospwRehabCare',
+                    'RehabCare',
+                    'InptnDaySTRehab',
+                    'InptnDayLTRehab',
+                    'TotalHosp',
+                    'TotalInptnBeds',
+                    'PhysPrmryCare',
+                    'MDPrmryCare',
+                    'PAwNPI',
+                    'AdvPrctRN',
+                    'NPwNPI')
+
+write_xlsx(ahrf_full, paste0(data_out, "AHRF_Controls_20102021.xlsx"))
 
 
 # Delete raw data as it’s too large ---------------------------------------
